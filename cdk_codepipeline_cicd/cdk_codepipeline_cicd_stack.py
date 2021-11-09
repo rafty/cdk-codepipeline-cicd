@@ -5,10 +5,10 @@ from aws_cdk.pipelines import CodePipelineSource
 from aws_cdk.pipelines import ShellStep
 from aws_cdk.pipelines import ManualApprovalStep
 from app_stage import MyAppStage
-from app import account, region
+# from configurations import Configurations
 
-# account = os.getenv('CDK_DEFAULT_ACCOUNT')
-# region = 'ap-northeast-1'
+account = os.getenv('CDK_DEFAULT_ACCOUNT')
+region = 'ap-northeast-1'
 
 
 class CdkCodepipelineCicdStack(cdk.Stack):
@@ -30,6 +30,7 @@ class CdkCodepipelineCicdStack(cdk.Stack):
             scope=self,
             id='Pipeline',
             pipeline_name='MyPipeline',
+            self_mutation=False,
             synth=ShellStep(
                 id='Synth',
                 input=CodePipelineSource.git_hub(
@@ -46,14 +47,16 @@ class CdkCodepipelineCicdStack(cdk.Stack):
 
         dev_stage = my_pipeline.add_stage(
             MyAppStage(self, 'myAppDev',
-                       env=cdk.Environment(account=account, region=region))
+                       env=cdk.Environment(
+                           account=account, region=region))
         )
 
         dev_stage.add_post(ManualApprovalStep('approval'))
 
         prod_stage = my_pipeline.add_stage(
             MyAppStage(self, 'myAppProd',
-                       env=cdk.Environment(account=account, region=region))
+                       env=cdk.Environment(
+                           account=account, region=region))
         )
 
         prod_stage.add_post(ManualApprovalStep('approval'))
