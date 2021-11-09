@@ -10,7 +10,6 @@ region = 'ap-northeast-1'
 
 app = cdk.App()
 CdkCodepipelineCicdStack(app, "CdkCodepipelineCicdStack",
-                         env=cdk.Environment(
-                             account=account, region=region))
+                         env=cdk.Environment(account=account, region=region))
 
 app.synth()
