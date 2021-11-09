@@ -62,22 +62,7 @@ class CdkCodepipelineCicdStack(cdk.Stack):
                                     region=account.region)
                                 )
 
-        my_pipeline.add_stage(prod_stage)
-
-        # dev_stage = my_pipeline.add_stage(
-        #     MyAppStage(self, 'myAppDev',
-        #                env=cdk.Environment(
-        #                    account=account.id,
-        #                    region=account.region))
-        # )
-        #
-        # dev_stage.add_post(ManualApprovalStep('approval'))
-        #
-        # prod_stage = my_pipeline.add_stage(
-        #     MyAppStage(self, 'myAppProd',
-        #                env=cdk.Environment(
-        #                    account=account.id,
-        #                    region=account.region))
-        # )
-        #
-        # prod_stage.add_post(ManualApprovalStep('approval'))
+        prod_stage_deployment = my_pipeline.add_stage(prod_stage)
+        prod_stage_deployment.add_pre(
+            ManualApprovalStep('approval')
+        )
